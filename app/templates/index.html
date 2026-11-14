@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>dbt-test-doctor</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { border: 1px solid #ccc; padding: .4rem; text-align: left; vertical-align: top; }
+    .fail { color: #b00020; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>dbt-test-doctor</h1>
+  <p>Upload a dbt <code>target/run_results.json</code> to diagnose failing tests.</p>
+
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".json" required>
+    <button type="submit">Diagnose</button>
+  </form>
+
+  {% if findings is defined %}
+    <h2>Report #{{ report_id }}: {{ findings|length }} failing test(s)</h2>
+    {% if findings %}
+    <table>
+      <tr><th>Test</th><th>Status</th><th>Category</th><th>Suggested fix</th></tr>
+      {% for f in findings %}
+      <tr>
+        <td>{{ f.test }}</td>
+        <td class="fail">{{ f.status }}</td>
+        <td>{{ f.category }}</td>
+        <td>{{ f.suggestion }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+      <p>All tests passed. Nothing to fix.</p>
+    {% endif %}
+  {% endif %}
+
+  <h2>Recent reports</h2>
+  <ul>
+    {% for r in reports %}
+      <li>#{{ r.id }} · {{ r.created_at }} · {{ r.failures }} failure(s)</li>
+    {% else %}
+      <li>No reports yet.</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

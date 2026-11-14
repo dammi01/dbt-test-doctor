@@ -1,0 +1,8 @@
+{
+  "metadata": {"dbt_version": "1.8.0"},
+  "results": [
+    {"unique_id": "test.shop.unique_orders_order_id.a1b2c3", "status": "pass", "message": null},
+    {"unique_id": "test.shop.not_null_orders_customer_id.d4e5f6", "status": "fail", "message": "Got 12 results, configured to fail if != 0"},
+    {"unique_id": "test.shop.assert_order_total_positive.9f8e7d", "status": "fail", "message": "Got 3 results, configured to fail if != 0"}
+  ]
+}
