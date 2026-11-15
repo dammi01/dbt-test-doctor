@@ -18,13 +18,30 @@ uv venv
 uv pip install -r requirements.txt
 uv run pytest
 ```
-The suite has 9 tests: unit tests for the diagnosis logic and integration tests for the API.
+The suite has 10 tests: unit tests for the diagnosis logic and integration tests for the API.
 
 ## Logging
 Each HTTP request writes one JSON line to stdout, with a `request_id` that is also returned
 in the `X-Request-ID` response header. A valid `X-Request-ID` sent by the client is reused.
 Logs never contain request bodies, query strings, headers, or the content of uploaded
 `run_results.json` files. Set `LOG_PATH` to also write the logs to a file.
+
+## Observability
+Each request writes one structured JSON log line with a `request_id`. The optional
+dashboard in `dashboard/` reads these lines with DuckDB and shows them in Streamlit:
+request counts per route and status, 5xx errors, and p95 latency.
+
+Run the API with logging enabled, then the dashboard:
+
+```bash
+LOG_PATH=logs/app.jsonl uv run uvicorn app.main:app --port 8001
+VIRTUAL_ENV=.venv-dashboard uv run streamlit run dashboard/app.py
+```
+
+The dashboard has its own environment (`requirements-dashboard.txt`), so Streamlit
+does not conflict with the API dependencies. Open http://localhost:8501.
+
+![Dashboard showing request logs](docs/dashboard.png)
 
 ## Live deployment
 - **URL:** https://dbt-test-doctor.onrender.com
