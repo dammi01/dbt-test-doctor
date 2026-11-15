@@ -19,4 +19,4 @@ each failure with a category and a suggested fix.
 - AC3: Each run appears in the "Recent reports" list after a restart.
 - AC4: Invalid input returns 400.
 - AC5: `pytest` passes locally and in CI.
-- AC6: `docker compose up --build` starts the app on port 8000 with no other steps.
+- AC6: `docker compose up --build` starts the app on port 8001 with no other steps.
