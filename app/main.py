@@ -8,9 +8,15 @@ from fastapi.templating import Jinja2Templates
 
 from app import db
 from app.diagnose import diagnose
+from app.logging_setup import RequestIdMiddleware, configure_logging
 
 app = FastAPI(title="dbt-test-doctor")
+configure_logging()
+app.add_middleware(RequestIdMiddleware)
+
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
+
+# ... parse_run_results, /health, /, /upload continuam iguais
 
 
 def parse_run_results(raw: bytes) -> dict:

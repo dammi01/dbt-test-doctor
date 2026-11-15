@@ -34,3 +34,10 @@ def test_upload_rejects_invalid_json(client):
 def test_upload_rejects_non_dbt_json(client):
     response = client.post("/upload", files={"file": ("x.json", b'{"foo": 1}', "application/json")})
     assert response.status_code == 400
+    
+    
+def test_request_id_header_and_log_line(client, caplog):
+    response = client.get("/health", headers={"X-Request-ID": "abc12345-test"})
+    assert response.headers["X-Request-ID"] == "abc12345-test"
+    records = [r for r in caplog.records if getattr(r, "event", None) == "http_request"]
+    assert records and records[-1].status == 200
